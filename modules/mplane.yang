@@ -1,0 +1,69 @@
+module mplane {
+
+  // the namespace for NETCONF XML definitions is unchanged
+  // from RFC 4741, which this document replaces
+  namespace "mplane";
+
+  prefix nc;
+
+  organization
+    "PS";
+
+  contact
+     "odidev/ossdev";
+  description
+     "Dummy description.";
+
+  revision 2013-09-29 {
+    description
+      "Updated to include NACM attributes";
+    reference
+      "RFC 6536: sec 3.2.5 and 3.2.8";
+  }
+
+  revision 2011-06-01 {
+    description
+      "Initial revision";
+    reference
+      "RFC 6241: Network Configuration Protocol";
+  }
+
+  rpc start {
+    description
+      "Dummy start implementation";
+
+    reference "RFC 0000, Section 0.0";
+        input {
+            leaf arg {
+                type boolean;
+            }
+        }
+
+        output {
+            leaf ret {
+                type int64;
+            }
+        }
+
+  }
+
+  rpc stop {
+    description
+      "Dummy stop implementation";
+
+    reference "RFC 0000, Section 0.0";
+        input {
+            leaf arg {
+                type boolean;
+            }
+        }
+
+        output {
+            leaf ret {
+                type int64;
+            }
+        }
+
+  }
+
+}

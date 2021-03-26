@@ -18,6 +18,12 @@
 #include <libyang/libyang.h>
 #include <sysrepo.h>
 
+int mplane_rpc_start_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const size_t input_cnt,
+        sr_event_t event, uint32_t request_id, sr_val_t **output, size_t *output_cnt, void *private_data);
+
+int mplane_rpc_stop_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const size_t input_cnt,
+        sr_event_t event, uint32_t request_id, sr_val_t **output, size_t *output_cnt, void *private_data);
+
 int np2srv_rpc_get_cb(sr_session_ctx_t *session, const char *op_path, const struct lyd_node *input,
         sr_event_t event, uint32_t request_id, struct lyd_node *output, void *private_data);
 

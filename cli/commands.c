@@ -857,6 +857,18 @@ cmd_discardchanges_help(void)
 }
 
 void
+cmd_stop_help(void)
+{
+    printf("============ cli/commands.c : cmd_stop_help() called...\n");
+}
+
+void
+cmd_start_help(void)
+{
+    printf("============ cli/commands.c : cmd_start_help() called...\n");
+}
+
+void
 cmd_editconfig_help(void)
 {
     const char *rollback, *validate, *running, *candidate, *url, *bracket;
@@ -3411,6 +3423,18 @@ fail:
     return ret;
 }
 
+int cmd_start(const char *arg, int i)
+{
+    printf("=============== cli/commands.c : cmd_start() called...(i: %d)\n",i);
+    return 0;
+}
+
+int cmd_stop(const char *arg, int i)
+{
+    printf("=============== cli/commands.c : cmd_stop() called...(i: %d)\n",i);
+    return 0;
+}
+
 int
 cmd_editconfig(const char *arg, char **tmp_config_file)
 {
@@ -5353,6 +5377,8 @@ COMMAND commands[] = {
         {"delete-config", cmd_deleteconfig, cmd_deleteconfig_help, "ietf-netconf <delete-config> operation"},
         {"discard-changes", cmd_discardchanges, cmd_discardchanges_help, "ietf-netconf <discard-changes> operation"},
         {"edit-config", cmd_editconfig, cmd_editconfig_help, "ietf-netconf <edit-config> operation"},
+        {"start", cmd_start, cmd_start_help, "mplane <start> operation"},
+        {"stop", cmd_stop, cmd_stop_help, "mplane <stop> operation"},
         {"get", cmd_get, cmd_get_help, "ietf-netconf <get> operation"},
         {"get-config", cmd_getconfig, cmd_getconfig_help, "ietf-netconf <get-config> operation"},
         {"kill-session", cmd_killsession, cmd_killsession_help, "ietf-netconf <kill-session> operation"},

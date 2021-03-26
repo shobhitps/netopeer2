@@ -743,6 +743,29 @@ error:
 }
 
 static int
+mplane_rpc_subscribe(void)
+{
+    int rc;
+
+#define MPLANE_RPC_SUBSCR(xpath, cb) \
+    rc = sr_rpc_subscribe(np2srv.sr_sess, xpath, cb, NULL, 0, SR_SUBSCR_CTX_REUSE, &np2srv.sr_rpc_sub); \
+    if (rc != SR_ERR_OK) { \
+        ERR("Subscribing for \"%s\" RPC failed (%s).", xpath, sr_strerror(rc)); \
+        goto error; \
+    }
+
+    MPLANE_RPC_SUBSCR("/mplane:start", mplane_rpc_start_cb);
+    MPLANE_RPC_SUBSCR("/mplane:stop", mplane_rpc_stop_cb);
+
+    return 0;
+
+error:
+    ERR("Server RPC subscribe failed.");
+    return -1;
+}
+
+
+static int
 server_rpc_subscribe(void)
 {
     int rc;
@@ -1314,6 +1337,13 @@ main(int argc, char *argv[])
         ret = EXIT_FAILURE;
         goto cleanup;
     }
+
+    /* subscribe to mplane rpc */
+    if(mplane_rpc_subscribe()) {
+        ret = EXIT_FAILURE;
+        goto cleanup;
+    }
+
     if (server_data_subscribe()) {
         ret = EXIT_FAILURE;
         goto cleanup;

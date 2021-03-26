@@ -211,6 +211,7 @@ main(void)
         tmp_config_file = NULL;
         free(cmd);
         free(cmdline);
+	printf("================= Calling from client main.c...\n");
     }
 
     store_config();
