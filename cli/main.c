@@ -124,9 +124,19 @@ ly_print_clb(LY_LOG_LEVEL level, const char *msg, const char *path)
     }
 }
 
+#define TREAT_CLI_MODULE_AS_OUR_LOCAL_APP 1
 int
 main(void)
 {
+    #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
+      #define CMD_COUNTS 3
+      char user_commands[CMD_COUNTS][50]={
+                              "connect --login root root",
+                              "user-rpc --content /tmp/contentFileForUserRPC.txt",
+                              "quit"
+                            };
+      int i_cmd=0;
+    #endif
     char *cmd, *cmdline, *cmdstart, *tmp_config_file = NULL;
     int i, j;
     struct sigaction action;
@@ -156,8 +166,13 @@ main(void)
     }
 
     while (!done) {
+        #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
+        cmdline = user_commands[i_cmd++];
+	printf("==== Going to provide command \"%s\"\n", user_commands[i_cmd]);
+        #else
         /* get the command from user */
         cmdline = linenoise(PROMPT);
+        #endif
 
         /* EOF -> exit */
         if (cmdline == NULL) {
@@ -165,11 +180,15 @@ main(void)
             cmdline = strdup("quit");
         }
 
+        #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
+	//write code here if need to check anything in provided command
+	#else
         /* empty line -> wait for another command */
         if (*cmdline == '\0') {
             free(cmdline);
             continue;
         }
+        #endif
 
         /* isolate the command word. */
         for (i = 0; cmdline[i] && (cmdline[i] == ' '); i++);
@@ -210,7 +229,12 @@ main(void)
 
         tmp_config_file = NULL;
         free(cmd);
+        #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
+	//In this change we are providing series-of-commands statically from code
+	//On reading the same from any file, we may need to use free for cmdline
+        #else
         free(cmdline);
+        #endif
 	printf("================= Calling from client main.c...\n");
     }
 
