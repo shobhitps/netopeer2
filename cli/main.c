@@ -129,11 +129,11 @@ int
 main(void)
 {
     #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
-      #define CMD_COUNTS 3
+      #define CMD_COUNTS 2
       char user_commands[CMD_COUNTS][50]={
                               "connect --login root root",
-                              "user-rpc --content /tmp/contentFileForUserRPC.txt",
-                              "quit"
+                              "user-rpc",// --content /tmp/contentFileForUserRPC.txt,
+                              //"quit"
                             };
       int i_cmd=0;
     #endif
@@ -167,12 +167,15 @@ main(void)
 
     while (!done) {
         #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
-        cmdline = user_commands[i_cmd++];
-	printf("==== Going to provide command \"%s\"\n", user_commands[i_cmd]);
-        #else
+        if(i_cmd<CMD_COUNTS)
+        {
+            printf(" ==== Going to provide command no:%d:: \"%s\"\n", i_cmd, user_commands[i_cmd]);
+            cmdline = user_commands[i_cmd];
+        }
+        else
+        #endif
         /* get the command from user */
         cmdline = linenoise(PROMPT);
-        #endif
 
         /* EOF -> exit */
         if (cmdline == NULL) {
@@ -181,14 +184,16 @@ main(void)
         }
 
         #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
-	//write code here if need to check anything in provided command
-	#else
+        if(i_cmd<CMD_COUNTS)
+        {//write code here if need to check anything in provided command
+        }
+        else
+        #endif
         /* empty line -> wait for another command */
         if (*cmdline == '\0') {
             free(cmdline);
             continue;
         }
-        #endif
 
         /* isolate the command word. */
         for (i = 0; cmdline[i] && (cmdline[i] == ' '); i++);
@@ -230,13 +235,17 @@ main(void)
         tmp_config_file = NULL;
         free(cmd);
         #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
-	//In this change we are providing series-of-commands statically from code
-	//On reading the same from any file, we may need to use free for cmdline
-        #else
-        free(cmdline);
+        if(i_cmd<CMD_COUNTS)
+        {
+            i_cmd++;
+            //In this change we are providing series-of-commands statically from code
+            //On reading the same from any file, we may need to use free for cmdline
+        }
+        else
         #endif
-	printf("================= Calling from client main.c...\n");
+        free(cmdline);
     }
+    printf("================= Printing from client cli/main.c...\n");
 
     store_config();
 
