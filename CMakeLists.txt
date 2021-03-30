@@ -139,7 +139,6 @@ set(SERVER_SRC
     src/log.c
     sp/notif_send_example.c
     sp/notif_subscribe_example.c  
-    sp/rpc_send_example.c 
     sp/rpc_subscribe_example.c)
 
 # at least some remote transport is enabled

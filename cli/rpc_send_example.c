@@ -113,20 +113,20 @@ print_val(const sr_val_t *value)
 }
 
 int
-main_rpc_send(int argc, char **argv)
+mplane_rpc_send(sr_session_ctx_t *session, const char *path)
 {
     sr_conn_ctx_t *connection = NULL;
-    sr_session_ctx_t *session = NULL;
+    //sr_session_ctx_t *session = NULL;
     int rc = SR_ERR_OK;
     sr_val_t *output = NULL;
     size_t i, output_count = 0;
-    const char *path;
+    //const char *path;
 
-    if (argc != 2) {
+    /*if (argc != 2) {
         printf("%s <rpc-path>\n", argv[0]);
         return EXIT_FAILURE;
     }
-    path = argv[1];
+    path = argv[1];*/
 
     printf("Application will send RPC \"%s\".\n\n", path);
 
@@ -159,6 +159,6 @@ main_rpc_send(int argc, char **argv)
 
 cleanup:
     sr_free_values(output, output_count);
-    sr_disconnect(connection);
+//    sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

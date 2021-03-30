@@ -26,7 +26,7 @@
 
 #include "sysrepo.h"
 
-volatile int exit_application = 0;
+//volatile int exit_application = 0;
 
 static void
 print_val(const sr_val_t *value)
@@ -145,30 +145,30 @@ rpc_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const
     return SR_ERR_OK;
 }
 
-static void
-sigint_handler(int signum)
-{
-    (void)signum;
-
-    exit_application = 1;
-}
+//static void
+//sigint_handler(int signum)
+//{
+//    (void)signum;
+//
+//    exit_application = 1;
+//}
 
 int
-main_rpc_subscribe(int argc, char **argv)
+mplane_rpc_subscribe(sr_session_ctx_t *session, sr_conn_ctx_t *connection, const char *path, sr_subscription_ctx_t *subscription)
 {
-    sr_conn_ctx_t *connection = NULL;
-    sr_session_ctx_t *session = NULL;
-    sr_subscription_ctx_t *subscription = NULL;
+//    sr_conn_ctx_t *connection = NULL;
+    //sr_session_ctx_t *session = NULL;
+    //sr_subscription_ctx_t *subscription = NULL;
     int rc = SR_ERR_OK;
-    const char *path;
+    //const char *path;
 
-    if (argc != 2) {
-        printf("%s <path-to-rpc>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-    path = argv[1];
+    //if (false) {
+    //    printf("%s <path-to-rpc>\n", argv[0]);
+    //    return EXIT_FAILURE;
+    //}
+    //path = p;
 
-    printf("Application will subscribe to \"%s\" RPC.\n\n", path);
+    printf("===== Application will subscribe to \"%s\" RPC.\n\n", path);
 
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
@@ -194,15 +194,15 @@ main_rpc_subscribe(int argc, char **argv)
     printf("\n\n ========== LISTENING FOR RPC ==========\n\n");
 
     /* loop until ctrl-c is pressed / SIGINT is received */
-    signal(SIGINT, sigint_handler);
+    //signal(SIGINT, sigint_handler);
     signal(SIGPIPE, SIG_IGN);
-    while (!exit_application) {
+    /*while (!exit_application) {
         sleep(1000);
-    }
+    }*/
 
-    printf("Application exit requested, exiting.\n");
+    printf("Returned from Application mplane_rpc_subscribe()\n");
 
 cleanup:
-    sr_disconnect(connection);
+    //sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

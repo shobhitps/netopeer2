@@ -3426,6 +3426,8 @@ fail:
 int cmd_start(const char *arg, int i)
 {
     printf("=============== cli/commands.c : cmd_start() called...(i: %d)\n",i);
+    mplane_rpc_send(session, "/examples:oper");
+    //ToDo: not sure on reliability and usage of passed session and connection objects yet
     return 0;
 }
 

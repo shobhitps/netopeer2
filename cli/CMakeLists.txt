@@ -13,6 +13,7 @@ set(CLI_SRC
     commands.c
     completion.c
     configuration.c
+    rpc_send_example.c
     linenoise/linenoise.c)
 
 # netopeer2-cli target
@@ -40,6 +41,13 @@ if(LIBNETCONF2_ENABLED_TLS)
     target_link_libraries(netopeer2-cli ${OPENSSL_LIBRARIES})
     include_directories(${OPENSSL_INCLUDE_DIR})
 endif()
+
+# dependencies - sysrepo
+find_package(Sysrepo REQUIRED)
+target_link_libraries(netopeer2-cli ${SYSREPO_LIBRARIES})
+include_directories(${SYSREPO_INCLUDE_DIRS})
+list(APPEND CMAKE_REQUIRED_INCLUDES ${SYSREPO_INCLUDE_DIRS})
+list(APPEND CMAKE_REQUIRED_LIBRARIES ${SYSREPO_LIBRARIES})
 
 check_function_exists(eaccess HAVE_EACCESS)
 check_function_exists(mkstemps HAVE_MKSTEMPS)

@@ -132,7 +132,7 @@ main(void)
       #define CMD_COUNTS 2
       char user_commands[CMD_COUNTS][50]={
                               "connect --login root root",
-                              "user-rpc",// --content /tmp/contentFileForUserRPC.txt,
+                              "user-rpc --content /tmp/content-user-rpc.xml",
                               //"quit"
                             };
       int i_cmd=0;
