@@ -137,9 +137,10 @@ set(SERVER_SRC
     src/netconf_acm.c
     src/netconf_nmda.c
     src/log.c
-    sp/notif_send_example.c
-    sp/notif_subscribe_example.c  
-    sp/rpc_subscribe_example.c)
+    src/sp/application_changes_example.c
+#    src/sp/notif_send_example.c
+#    src/sp/notif_subscribe_example.c  
+    src/sp/rpc_subscribe_example.c)
 
 # at least some remote transport is enabled
 if(LIBNETCONF2_ENABLED_SSH OR LIBNETCONF2_ENABLED_TLS)

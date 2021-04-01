@@ -132,9 +132,15 @@ main(void)
       #define CMD_COUNTS 2
       char user_commands[CMD_COUNTS][50]={
                               "connect --login root root",
-                              "user-rpc --content /tmp/content-user-rpc.xml",
+                              //"user-rpc --content /tmp/content-user-rpc.xml",
+                              //"start",
+                              "set_item Puresoftware01",  //Currently using path 'examples:cont/l' to store provided value, we can change code to use provided path too
+                              //"get_items /examples:*//. operational",
+                                 //"set_item PureSoftware02",
+                                 //"get_items /examples:*//. operational",
                               //"quit"
                             };
+         //ToDo: Parameters for newly added commands are not working now from here, need to look into this
       int i_cmd=0;
     #endif
     char *cmd, *cmdline, *cmdstart, *tmp_config_file = NULL;
@@ -169,7 +175,7 @@ main(void)
         #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
         if(i_cmd<CMD_COUNTS)
         {
-            printf(" ==== Going to provide command no:%d:: \"%s\"\n", i_cmd, user_commands[i_cmd]);
+            printf("\n\n <<<<<<<<-------- Going to provide [S.No:%d] command: \"%s\"\n", i_cmd, user_commands[i_cmd]);
             cmdline = user_commands[i_cmd];
         }
         else
@@ -237,6 +243,9 @@ main(void)
         #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
         if(i_cmd<CMD_COUNTS)
         {
+            printf("\n -------->>>>>>>> Ended processing for [S.No:%d] command: \"%s\"\n\n", i_cmd, user_commands[i_cmd]);
+            printf((i_cmd == CMD_COUNTS - 1)?"\nEntering in interactive command input console now...\n":"\nGoing to provide next command from provided command sequence...\n");
+            sleep(2);
             i_cmd++;
             //In this change we are providing series-of-commands statically from code
             //On reading the same from any file, we may need to use free for cmdline
@@ -245,7 +254,6 @@ main(void)
         #endif
         free(cmdline);
     }
-    printf("================= Printing from client cli/main.c...\n");
 
     store_config();
 

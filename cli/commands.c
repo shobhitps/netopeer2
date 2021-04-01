@@ -857,9 +857,15 @@ cmd_discardchanges_help(void)
 }
 
 void
+cmd_set_item_help(void)
+{
+   printf("============ cli/commands.c : cmd_set_item_help() called...\n");
+}
+
+void
 cmd_stop_help(void)
 {
-    printf("============ cli/commands.c : cmd_stop_help() called...\n");
+   printf("============ cli/commands.c : cmd_stop_help() called...\n");
 }
 
 void
@@ -3423,17 +3429,26 @@ fail:
     return ret;
 }
 
-int cmd_start(const char *arg, int i)
+int cmd_set_item(const char *arg, char **tmp_config_file)
 {
-    printf("=============== cli/commands.c : cmd_start() called...(i: %d)\n",i);
-    mplane_rpc_send(session, "/examples:oper");
+    printf("\n------- Just checking char * arg value: %s\n",arg);
+    printf("=============== cli/commands.c : cmd_start() called...(**tmp_config_file: %s)\n", *tmp_config_file);
+    main_set_item(session, "/examples:cont/l", arg);
     //ToDo: not sure on reliability and usage of passed session and connection objects yet
     return 0;
 }
 
-int cmd_stop(const char *arg, int i)
+int cmd_start(const char *arg, char **tmp_config_file)
 {
-    printf("=============== cli/commands.c : cmd_stop() called...(i: %d)\n",i);
+   printf("=============== cli/commands.c : cmd_start() called...(**tmp_config_file: %s)\n", *tmp_config_file);
+   main_rpc_send(session, "/examples:oper");
+   //ToDo: not sure on reliability and usage of passed session and connection objects yet
+   return 0;
+}
+
+int cmd_stop(const char *arg, char **tmp_config_file)
+{
+    printf("=============== cli/commands.c : cmd_stop() called...(**tmp_config_file: %s)\n", *tmp_config_file);
     return 0;
 }
 
@@ -5379,6 +5394,7 @@ COMMAND commands[] = {
         {"delete-config", cmd_deleteconfig, cmd_deleteconfig_help, "ietf-netconf <delete-config> operation"},
         {"discard-changes", cmd_discardchanges, cmd_discardchanges_help, "ietf-netconf <discard-changes> operation"},
         {"edit-config", cmd_editconfig, cmd_editconfig_help, "ietf-netconf <edit-config> operation"},
+        {"set_item", cmd_set_item, cmd_set_item_help, "examples <set_item> operation"},
         {"start", cmd_start, cmd_start_help, "mplane <start> operation"},
         {"stop", cmd_stop, cmd_stop_help, "mplane <stop> operation"},
         {"get", cmd_get, cmd_get_help, "ietf-netconf <get> operation"},

@@ -807,6 +807,8 @@ server_data_subscribe(void)
         goto error; \
     }
 
+
+
     /* subscribe for providing state data */
     if (np2srv.sr_data_sub) {
         EINT;
@@ -1082,6 +1084,7 @@ main(int argc, char *argv[])
     int daemonize = 1, verb = 0;
     int pidfd;
     const char *pidfile = NP2SRV_PID_FILE_PATH;
+    const char *mod_name, *xpath;
     char pid[8];
     char *ptr;
     struct passwd *pwd;
@@ -1316,10 +1319,17 @@ main(int argc, char *argv[])
     }
 
     /* subscribe to mplane rpc */
-    if(mplane_rpc_subscribe(np2srv.sr_sess, np2srv.sr_conn, "/examples:oper", np2srv.sr_rpc_sub) != 0) {
+    if(main_rpc_subscribe(np2srv.sr_sess, np2srv.sr_conn, "/examples:oper", np2srv.sr_rpc_sub) != 0) {
         ret = EXIT_FAILURE;
         goto cleanup;
     }
+    /* examples */
+    mod_name = "examples";
+    /* subscribe to mplane application changes */
+    xpath = "/examples:cont/l";
+    main_application_changes(np2srv.sr_sess, np2srv.sr_conn, mod_name, xpath, np2srv.sr_data_sub);
+    //   SR_CONFIG_SUBSCR(/*mod_name*/"examples", xpath, module_change_cb);
+
 
     if (server_data_subscribe()) {
         ret = EXIT_FAILURE;

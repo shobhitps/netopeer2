@@ -1,7 +1,7 @@
 /**
- * @file rpc_send_example.c
+ * @file rpc_subscribe_example.c
  * @author Michal Vasko <mvasko@cesnet.cz>
- * @brief example of an application that sends an RPC
+ * @brief example of an application subscribing to an RPC
  *
  * @copyright
  * Copyright (c) 2019 CESNET, z.s.p.o.
@@ -13,6 +13,7 @@
  *     https://opensource.org/licenses/BSD-3-Clause
  */
 #define _GNU_SOURCE
+#define _XOPEN_SOURCE 500
 
 #include <inttypes.h>
 #include <signal.h>
@@ -24,6 +25,8 @@
 #include <libyang/libyang.h>
 
 #include "sysrepo.h"
+
+//volatile int exit_application = 0;
 
 static void
 print_val(const sr_val_t *value)
@@ -112,23 +115,60 @@ print_val(const sr_val_t *value)
     }
 }
 
-int
-mplane_rpc_send(sr_session_ctx_t *session, const char *path)
+static int
+rpc_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const size_t input_cnt,
+        sr_event_t event, uint32_t request_id, sr_val_t **output, size_t *output_cnt, void *private_data)
 {
-    sr_conn_ctx_t *connection = NULL;
+    size_t i;
+
+    (void)session;
+    (void)event;
+    (void)request_id;
+    (void)private_data;
+
+    printf("\n\n ========== RPC \"%s\" RECEIVED: =======================\n\n", path);
+    for (i = 0; i < input_cnt; ++i) {
+        print_val(&input[i]);
+    }
+
+    if (!strcmp(path, "/examples:oper")) {
+        /* generate some output */
+        *output = malloc(sizeof **output);
+        *output_cnt = 1;
+
+        (*output)[0].xpath = strdup("/examples:oper/ret");
+        (*output)[0].type = SR_INT64_T;
+        (*output)[0].dflt = 0;
+        (*output)[0].data.int64_val = -123456;
+    }
+
+    return SR_ERR_OK;
+}
+
+//static void
+//sigint_handler(int signum)
+//{
+//    (void)signum;
+//
+//    exit_application = 1;
+//}
+
+int
+main_rpc_subscribe(sr_session_ctx_t *session, sr_conn_ctx_t *connection, const char *path, sr_subscription_ctx_t *subscription)
+{
+//    sr_conn_ctx_t *connection = NULL;
     //sr_session_ctx_t *session = NULL;
+    //sr_subscription_ctx_t *subscription = NULL;
     int rc = SR_ERR_OK;
-    sr_val_t *output = NULL;
-    size_t i, output_count = 0;
     //const char *path;
 
-    /*if (argc != 2) {
-        printf("%s <rpc-path>\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-    path = argv[1];*/
+    //if (false) {
+    //    printf("%s <path-to-rpc>\n", argv[0]);
+    //    return EXIT_FAILURE;
+    //}
+    //path = p;
 
-    printf("Application will send RPC \"%s\".\n\n", path);
+    printf("===== Application will subscribe to \"%s\" RPC.\n\n", path);
 
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
@@ -145,20 +185,26 @@ mplane_rpc_send(sr_session_ctx_t *session, const char *path)
         goto cleanup;
     }
 
-    /* send the RPC */
-    rc = sr_rpc_send(session, path, NULL, 0, 0, &output, &output_count);
+    /* subscribe for the RPC */
+    rc = sr_rpc_subscribe(session, path, rpc_cb, NULL, 0, 0, &subscription);
     if (rc != SR_ERR_OK) {
         goto cleanup;
     }
 
-    /* print output */
-    printf("\n ========== RECEIVED OUTPUT: ==========\n\n");
-    for (i = 0; i < output_count; ++i) {
-        print_val(&output[i]);
-    }
+    printf("\n\n ========== LISTENING FOR RPC ==========\n\n");
+
+    /* loop until ctrl-c is pressed / SIGINT is received */
+    //signal(SIGINT, sigint_handler);
+    signal(SIGPIPE, SIG_IGN);
+    /*while (!exit_application) {
+        sleep(1000);
+    }*/
+
+    printf("Returned from Application main_rpc_subscribe()\n");
 
 cleanup:
-    sr_free_values(output, output_count);
-//    sr_disconnect(connection);
+    if (rc)
+       printf("\n\t\t\txxxxxxxxxxxxxx rpc_subscribe_example\n");
+    //sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

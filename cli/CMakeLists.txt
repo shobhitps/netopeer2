@@ -13,8 +13,10 @@ set(CLI_SRC
     commands.c
     completion.c
     configuration.c
-    rpc_send_example.c
-    linenoise/linenoise.c)
+    linenoise/linenoise.c
+    sp/rpc_send_example.c
+    sp/sr_get_items_example.c
+    sp/sr_set_item_example.c)
 
 # netopeer2-cli target
 add_executable(netopeer2-cli ${CLI_SRC} $<TARGET_OBJECTS:compat>)
