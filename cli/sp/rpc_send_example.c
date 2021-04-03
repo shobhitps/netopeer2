@@ -133,17 +133,21 @@ main_rpc_send(sr_session_ctx_t *session, const char *path)
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
 
-    /* connect to sysrepo */
-    rc = sr_connect(0, &connection);
-    if (rc != SR_ERR_OK) {
-        goto cleanup;
-    }
+    sr_conn_options_t opts;
 
-    /* start session */
-    rc = sr_session_start(connection, SR_DS_RUNNING, &session);
-    if (rc != SR_ERR_OK) {
-        goto cleanup;
-    }
+
+   /* connect to sysrepo */
+   rc = sr_connect(0, &connection);
+   if (rc != SR_ERR_OK) {
+      goto cleanup;
+   }
+
+   /* start session */
+   //rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
+   rc = sr_session_start(connection, SR_DS_RUNNING, &session);
+   if (rc != SR_ERR_OK) {
+      goto cleanup;
+   }
 
     /* send the RPC */
     rc = sr_rpc_send(session, path, NULL, 0, 0, &output, &output_count);
@@ -159,6 +163,8 @@ main_rpc_send(sr_session_ctx_t *session, const char *path)
 
 cleanup:
     sr_free_values(output, output_count);
-//    sr_disconnect(connection);
+    if (rc)
+       printf("\n\t\t\txxxxxxxxxxxxxx rpc_Send_example\n");
+    sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

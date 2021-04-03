@@ -129,16 +129,15 @@ int
 main(void)
 {
     #if TREAT_CLI_MODULE_AS_OUR_LOCAL_APP
-      #define CMD_COUNTS 2
-      char user_commands[CMD_COUNTS][50]={
-                              "connect --login root root",
-                              //"user-rpc --content /tmp/content-user-rpc.xml",
-                              //"start",
-                              "set_item Puresoftware01",  //Currently using path 'examples:cont/l' to store provided value, we can change code to use provided path too
-                              //"get_items /examples:*//. operational",
-                                 //"set_item PureSoftware02",
-                                 //"get_items /examples:*//. operational",
-                              //"quit"
+      #define CMD_COUNTS 1
+      char user_commands[CMD_COUNTS][60]={
+                              ////"connect --login root root",    
+                              "connect --host 192.168.2.152 --port 830 --login root",
+                              ////"user-rpc --content /tmp/content-user-rpc.xml",
+                              ////"start",
+                              ////"set_item Puresoftware01",  //Currently using hard-coded path 'examples:cont/l' to store provided value, we can change code to use provided path too
+                              ////"get_items running",        //Currently hard-coded module and path being used inside, but we can provide that as parameter after some more work
+                              //////"quit"
                             };
          //ToDo: Parameters for newly added commands are not working now from here, need to look into this
       int i_cmd=0;

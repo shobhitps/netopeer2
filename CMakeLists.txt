@@ -138,6 +138,7 @@ set(SERVER_SRC
     src/netconf_nmda.c
     src/log.c
     src/sp/application_changes_example.c
+    src/sp/oper_data_example.c
 #    src/sp/notif_send_example.c
 #    src/sp/notif_subscribe_example.c  
     src/sp/rpc_subscribe_example.c)

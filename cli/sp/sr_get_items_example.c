@@ -111,43 +111,45 @@ print_val(const sr_val_t *value)
 }
 
 int
-main_get_items(int argc, char **argv)
+main_get_items(sr_session_ctx_t *session, const char *xpath, const char *op_str)
 {
     sr_conn_ctx_t *connection = NULL;
-    sr_session_ctx_t *session = NULL;
+    //sr_session_ctx_t *session = NULL;
     int rc = SR_ERR_OK;
-    const char *xpath;
-    const char *op_str;
+    //const char *xpath;
+    //const char *op_str;
     sr_val_t *vals = NULL;
     size_t i, val_count = 0;
     sr_datastore_t ds = SR_DS_RUNNING;
 
-    if ((argc < 2) || (argc > 3)) {
-        printf("%s <xpath-to-get> [startup/running/operational/candidate]\n", argv[0]);
-        return EXIT_FAILURE;
-    }
-    xpath = argv[1];
-    if (argc == 3) {
-        if (!strcmp(argv[2], "running")) {
+    //if ((argc < 2) || (argc > 3)) {
+    //    printf("%s <xpath-to-get> [startup/running/operational/candidate]\n", argv[0]);
+    //    return EXIT_FAILURE;
+    //}
+    //xpath = argv[1];
+    if (op_str == NULL)
+       op_str = "running";
+    if (op_str) {
+        if (!strcmp(op_str, "running")) {
             ds = SR_DS_RUNNING;
-        } else if (!strcmp(argv[2], "operational")) {
+        } else if (!strcmp(op_str, "operational")) {
             ds = SR_DS_OPERATIONAL;
-        } else if (!strcmp(argv[2], "startup")) {
+        } else if (!strcmp(op_str, "startup")) {
             ds = SR_DS_STARTUP;
-        } else if (!strcmp(argv[2], "candidate")) {
+        } else if (!strcmp(op_str, "candidate")) {
             ds = SR_DS_CANDIDATE;
         } else {
-            printf("Invalid datastore %s\n", argv[2]);
+            printf("Invalid datastore %s\n", op_str);
             return EXIT_FAILURE;
         }
     }
-    op_str = (argc > 2) ? argv[2] : "running";
 
     printf("Application will get \"%s\" from \"%s\" datastore.\n\n", xpath, op_str);
 
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
 
+    connection = sr_session_get_connection(session);
     /* connect to sysrepo */
     rc = sr_connect(0, &connection);
     if (rc != SR_ERR_OK) {
@@ -173,6 +175,8 @@ main_get_items(int argc, char **argv)
 
 cleanup:
     sr_free_values(vals, val_count);
+    if (rc)
+       printf("\n\t\t\txxxxxxxxxxxxxx sr_get_items_example\n");
     sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

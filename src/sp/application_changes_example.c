@@ -24,7 +24,7 @@
 
 #include "sysrepo.h"
 
-volatile int exit_application = 0;
+//volatile int exit_application = 0;
 
 static void
 print_val(const sr_val_t *value)
@@ -220,15 +220,15 @@ cleanup:
 }
 
 //static void
-sigint_handler(int signum)
-{
-    (void)signum;
-
-    exit_application = 1;
-}
+//sigint_handler(int signum)
+//{
+//    (void)signum;
+//
+//    exit_application = 1;
+//}
 
 int
-main_application_changes(sr_session_ctx_t *session, sr_conn_ctx_t *connection, const char *mod_name, const char *xpath, sr_subscription_ctx_t *subscription)
+main_application_changes(sr_session_ctx_t *session, const char *mod_name, const char *xpath, sr_subscription_ctx_t *subscription)
 {
     //sr_conn_ctx_t *connection = NULL;
     //sr_session_ctx_t *session = NULL;
@@ -250,14 +250,14 @@ main_application_changes(sr_session_ctx_t *session, sr_conn_ctx_t *connection, c
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
 
-    /* connect to sysrepo */
-    rc = sr_connect(0, &connection);
-    if (rc != SR_ERR_OK) {
-        goto cleanup;
-    }
+    ///* connect to sysrepo */
+    //rc = sr_connect(0, &connection);
+    //if (rc != SR_ERR_OK) {
+    //    goto cleanup;
+    //}
 
-    /* start session */
-    rc = sr_session_start(connection, SR_DS_RUNNING, &session);
+    ///* start session */
+    rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
     if (rc != SR_ERR_OK) {
         goto cleanup;
     }

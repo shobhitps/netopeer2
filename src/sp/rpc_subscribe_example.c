@@ -154,7 +154,7 @@ rpc_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const
 //}
 
 int
-main_rpc_subscribe(sr_session_ctx_t *session, sr_conn_ctx_t *connection, const char *path, sr_subscription_ctx_t *subscription)
+main_rpc_subscribe(sr_session_ctx_t *session, const char *path, sr_subscription_ctx_t *subscription)
 {
 //    sr_conn_ctx_t *connection = NULL;
     //sr_session_ctx_t *session = NULL;
@@ -173,14 +173,17 @@ main_rpc_subscribe(sr_session_ctx_t *session, sr_conn_ctx_t *connection, const c
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
 
-    /* connect to sysrepo */
-    rc = sr_connect(0, &connection);
-    if (rc != SR_ERR_OK) {
-        goto cleanup;
-    }
+    ///* connect to sysrepo */
+    //rc = sr_connect(0, &connection);
+    //if (rc != SR_ERR_OK) {
+    //    goto cleanup;
+    //}
 
-    /* start session */
-    rc = sr_session_start(connection, SR_DS_RUNNING, &session);
+    ///* start session */
+    //rc = sr_session_start(connection, SR_DS_RUNNING, &session);
+    printf("\n+++++++++++++++++++++++++++ %x\n", session);
+    printf("\n+++++++++++++++++++++++++++ %x\n", sr_session_get_connection(session));
+    rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
     if (rc != SR_ERR_OK) {
         goto cleanup;
     }

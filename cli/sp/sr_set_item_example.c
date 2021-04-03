@@ -41,6 +41,7 @@ main_set_item(sr_session_ctx_t *session, const char *xpath, const char *value)
     /* turn logging on */
     sr_log_stderr(SR_LL_WRN);
 
+    connection = sr_session_get_connection(session);
     /* connect to sysrepo */
     rc = sr_connect(0, &connection);
     if (rc != SR_ERR_OK) {
@@ -66,6 +67,8 @@ main_set_item(sr_session_ctx_t *session, const char *xpath, const char *value)
     }
 
 cleanup:
-    //sr_disconnect(connection);
+    if (rc)
+       printf("\n\t\t\txxxxxxxxxxxxxx sr_set_item_example\n");
+    sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

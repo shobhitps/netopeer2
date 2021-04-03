@@ -863,9 +863,9 @@ cmd_set_item_help(void)
 }
 
 void
-cmd_stop_help(void)
+cmd_get_items_help(void)
 {
-   printf("============ cli/commands.c : cmd_stop_help() called...\n");
+   printf("============ cli/commands.c : cmd_get_item_help() called...\n");
 }
 
 void
@@ -3431,25 +3431,32 @@ fail:
 
 int cmd_set_item(const char *arg, char **tmp_config_file)
 {
-    printf("\n------- Just checking char * arg value: %s\n",arg);
-    printf("=============== cli/commands.c : cmd_start() called...(**tmp_config_file: %s)\n", *tmp_config_file);
+    printf("\n=============== cli/commands.c : cmd_set_item(...) called...(**tmp_config_file: %s)\n", *tmp_config_file);
+    printf("------- Just checking char *arg value: %s\n", arg);
+    if(strcmp(arg, "")==0)
+      strcpy(arg, "DummyValue01");  //Parse value of received arg and can provide that as value to be set
     main_set_item(session, "/examples:cont/l", arg);
-    //ToDo: not sure on reliability and usage of passed session and connection objects yet
+
+    return 0;
+}
+
+int cmd_get_items(const char *arg, char **tmp_config_file)
+{
+    printf("\n=============== cli/commands.c : cmd_get_items(...) called...(**tmp_config_file: %s)\n", *tmp_config_file);
+    printf("------- Just checking char *arg value: %s\n",arg);
+    main_get_items(session, "/examples:cont/l", "running"); //Parse value of received arg and can provide that as item(s) to be fetched
+    main_get_items(session, "/examples:stats", "operational");
+    main_get_items(session, "/examples:*//.", "operational");
+
     return 0;
 }
 
 int cmd_start(const char *arg, char **tmp_config_file)
 {
-   printf("=============== cli/commands.c : cmd_start() called...(**tmp_config_file: %s)\n", *tmp_config_file);
-   main_rpc_send(session, "/examples:oper");
-   //ToDo: not sure on reliability and usage of passed session and connection objects yet
-   return 0;
-}
+   printf("\n=============== cli/commands.c : cmd_start(...) called...(**tmp_config_file: %s)\n", *tmp_config_file);
+   main_rpc_send(session, "/examples:start");
 
-int cmd_stop(const char *arg, char **tmp_config_file)
-{
-    printf("=============== cli/commands.c : cmd_stop() called...(**tmp_config_file: %s)\n", *tmp_config_file);
-    return 0;
+   return 0;
 }
 
 int
@@ -5395,8 +5402,8 @@ COMMAND commands[] = {
         {"discard-changes", cmd_discardchanges, cmd_discardchanges_help, "ietf-netconf <discard-changes> operation"},
         {"edit-config", cmd_editconfig, cmd_editconfig_help, "ietf-netconf <edit-config> operation"},
         {"set_item", cmd_set_item, cmd_set_item_help, "examples <set_item> operation"},
-        {"start", cmd_start, cmd_start_help, "mplane <start> operation"},
-        {"stop", cmd_stop, cmd_stop_help, "mplane <stop> operation"},
+        {"get_items", cmd_get_items, cmd_get_items_help, "examples <get_item> operation"},
+        {"start", cmd_start, cmd_start_help, "examples <start> operation"},
         {"get", cmd_get, cmd_get_help, "ietf-netconf <get> operation"},
         {"get-config", cmd_getconfig, cmd_getconfig_help, "ietf-netconf <get-config> operation"},
         {"kill-session", cmd_killsession, cmd_killsession_help, "ietf-netconf <kill-session> operation"},
