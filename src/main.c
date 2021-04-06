@@ -1318,24 +1318,27 @@ main(int argc, char *argv[])
         goto cleanup;
     }
 
+    sr_subscription_ctx_t *sr_data_main;
     mod_name = "examples";
     xpath = "/examples:cont/l";  //or can provide "/examples:stats" from current yang
     /* subscribe to get item data *///sr_oper_get_items_cb
-    if (main_oper_data_example(np2srv.sr_sess, mod_name, xpath, np2srv.sr_data_sub) != 0) {
+    if (main_oper_data_example(np2srv.sr_sess, mod_name, xpath, sr_data_main) != 0) {
        printf("main.c: ------------------ XXXXXXXXXXXX 03");
        ret = EXIT_FAILURE;
        goto cleanup;
     }
 
+    sr_subscription_ctx_t *sr_rpc_main;
     /* subscribe to mplane rpc */
-    if(main_rpc_subscribe(np2srv.sr_sess, "/examples:start", np2srv.sr_rpc_sub) != 0) {
+    if(main_rpc_subscribe(np2srv.sr_sess, "/examples:start", sr_rpc_main) != 0) {
         printf("main.c: ------------------ XXXXXXXXXXXX 01");
         ret = EXIT_FAILURE;
         goto cleanup;
     }
 
+    sr_subscription_ctx_t *sr_data_main2;
     /* subscribe to set item data */      /* subscribe to mplane application changes */
-    if (main_application_changes(np2srv.sr_sess, mod_name, xpath, np2srv.sr_data_sub) != 0) {
+    if (main_application_changes(np2srv.sr_sess, mod_name, xpath, sr_data_main2) != 0) {
        printf("main.c: ------------------ XXXXXXXXXXXX 02");
        ret = EXIT_FAILURE;
        goto cleanup;

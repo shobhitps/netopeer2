@@ -132,7 +132,8 @@ main(void)
       #define CMD_COUNTS 1
       char user_commands[CMD_COUNTS][60]={
                               ////"connect --login root root",    
-                              "connect --host 192.168.2.152 --port 830 --login root",
+                              //"connect --host 192.168.2.152 --port 830 --login root",
+                              "connect --host 172.17.0.8 --port 830 --login root",
                               ////"user-rpc --content /tmp/content-user-rpc.xml",
                               ////"start",
                               ////"set_item Puresoftware01",  //Currently using hard-coded path 'examples:cont/l' to store provided value, we can change code to use provided path too

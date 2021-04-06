@@ -156,7 +156,7 @@ rpc_cb(sr_session_ctx_t *session, const char *path, const sr_val_t *input, const
 int
 main_rpc_subscribe(sr_session_ctx_t *session, const char *path, sr_subscription_ctx_t *subscription)
 {
-//    sr_conn_ctx_t *connection = NULL;
+    sr_conn_ctx_t *connection = NULL;
     //sr_session_ctx_t *session = NULL;
     //sr_subscription_ctx_t *subscription = NULL;
     int rc = SR_ERR_OK;
@@ -174,16 +174,16 @@ main_rpc_subscribe(sr_session_ctx_t *session, const char *path, sr_subscription_
     sr_log_stderr(SR_LL_WRN);
 
     ///* connect to sysrepo */
-    //rc = sr_connect(0, &connection);
-    //if (rc != SR_ERR_OK) {
-    //    goto cleanup;
-    //}
+    rc = sr_connect(0, &connection);
+    if (rc != SR_ERR_OK) {
+        goto cleanup;
+    }
 
     ///* start session */
-    //rc = sr_session_start(connection, SR_DS_RUNNING, &session);
+    rc = sr_session_start(connection, SR_DS_RUNNING, &session);
     printf("\n+++++++++++++++++++++++++++ %x\n", session);
     printf("\n+++++++++++++++++++++++++++ %x\n", sr_session_get_connection(session));
-    rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
+    //rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
     if (rc != SR_ERR_OK) {
         goto cleanup;
     }
@@ -208,6 +208,6 @@ main_rpc_subscribe(sr_session_ctx_t *session, const char *path, sr_subscription_
 cleanup:
     if (rc)
        printf("\n\t\t\txxxxxxxxxxxxxx rpc_subscribe_example\n");
-    //sr_disconnect(connection);
+    sr_disconnect(connection);
     return rc ? EXIT_FAILURE : EXIT_SUCCESS;
 }

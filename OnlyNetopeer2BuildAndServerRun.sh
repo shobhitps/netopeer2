@@ -1,4 +1,4 @@
-rm -rf build && mkdir build && cd build && cmake .. && make && make install && cd ..
+rm -rf build && mkdir build && cd build && cmake .. && make && make install && ldconfig && cd ..
 echo "   ==== Uninstalling examples yang module ===="
 sysrepoctl --uninstall examples
 sleep 2

@@ -113,10 +113,10 @@ print_val(const sr_val_t *value)
 }
 
 int
-main_rpc_send(sr_session_ctx_t *session, const char *path)
+main_rpc_send(struct nc_session *ncsession, const char *path)
 {
     sr_conn_ctx_t *connection = NULL; //Shobhit: ToDo: This connection may not work on different machine, if so need to look
-    //sr_session_ctx_t *session = NULL;
+    sr_session_ctx_t *session = NULL;
     int rc = SR_ERR_OK;
     sr_val_t *output = NULL;
     size_t i, output_count = 0;
@@ -141,7 +141,7 @@ main_rpc_send(sr_session_ctx_t *session, const char *path)
    if (rc != SR_ERR_OK) {
       goto cleanup;
    }
-
+   
    /* start session */
    //rc = sr_session_start(sr_session_get_connection(session), SR_DS_RUNNING, &session);
    rc = sr_session_start(connection, SR_DS_RUNNING, &session);
